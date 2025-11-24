@@ -16,6 +16,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Debug - show repo layout
+        run: |
+          echo "PWD: $(pwd)"
+          echo "List repo root:"; ls -la
+          echo "List mini-landing-site:"; ls -la ./mini-landing-site || true
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
