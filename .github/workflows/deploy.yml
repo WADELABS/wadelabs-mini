@@ -5,46 +5,38 @@ on:
     branches: [main]
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Debug - show repo layout
-        run: |
-          echo "PWD: $(pwd)"
-          echo "List repo root:"; ls -la
-          echo "List mini-landing-site:"; ls -la ./mini-landing-site || true
-
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
+          cache: 'npm'
 
-      - name: Install dependencies (mini-landing)
+      - name: Install dependencies
         run: |
-          echo "Installing from: $(pwd)/mini-landing-site";
-          cd mini-landing-site
-          echo "PWD after cd: $(pwd)";
-          ls -la
-          npm ci
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
 
-      - name: Build (mini-landing)
-        run: |
-          cd mini-landing-site
-          echo "Building in: $(pwd)";
-          npm run build
+      - name: Build
+        run: npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./mini-landing-site/dist
+          publish_dir: ./dist
           publish_branch: gh-pages
           cname: wadelabs.io
