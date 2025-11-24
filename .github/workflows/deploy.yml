@@ -28,12 +28,18 @@ jobs:
           node-version: '18'
 
       - name: Install dependencies (mini-landing)
-        run: npm ci
-        working-directory: ./mini-landing-site
+        run: |
+          echo "Installing from: $(pwd)/mini-landing-site";
+          cd mini-landing-site
+          echo "PWD after cd: $(pwd)";
+          ls -la
+          npm ci
 
       - name: Build (mini-landing)
-        run: npm run build
-        working-directory: ./mini-landing-site
+        run: |
+          cd mini-landing-site
+          echo "Building in: $(pwd)";
+          npm run build
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
