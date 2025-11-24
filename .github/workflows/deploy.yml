@@ -16,6 +16,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Debug filesystem
+        run: |
+          echo "=== Current directory ==="
+          pwd
+          echo "=== List all files ==="
+          ls -la
+          echo "=== Check index.html type ==="
+          file index.html
+          test -f index.html && echo "index.html is a FILE" || echo "index.html is NOT a file"
+          test -d index.html && echo "index.html is a DIRECTORY" || echo "index.html is NOT a directory"
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
